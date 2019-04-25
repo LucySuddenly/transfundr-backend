@@ -28,6 +28,12 @@ class ApplicationController < ActionController::API
       user = User.find_by(id: user_id)
     end
   end
+
+  def token_user_id
+    if decoded_token
+        decoded_token[0]['user_id']
+    end
+  end
  
   def logged_in?
     !!current_user
