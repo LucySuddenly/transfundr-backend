@@ -1,5 +1,5 @@
 class BeaconsController < ApplicationController
-    skip_before_action :authorized, only: [:show]
+    skip_before_action :authorized, only: [:show, :home]
 
     def create
         beacon = Beacon.new(beacon_params)
@@ -10,8 +10,12 @@ class BeaconsController < ApplicationController
 
     def show 
         beacon = Beacon.find(params[:id])
-        # beacon.user["profile"] = Profile.find_by(user_id: beacon.user.id)
         render json: beacon
+    end
+
+    def home
+        beacons = Beacon.all 
+        render json: beacons.to_json(:include => { :user => {:include => :profile}})
     end
 
     def beacon_params
