@@ -11,7 +11,7 @@ class BeaconsController < ApplicationController
     def show 
         beacon = Beacon.find(params[:id])
         total = 0
-        beacon.donations.map do |donation|
+        beacon.donations.each do |donation|
             if donation.confirmed 
                 total += donation.amount
             end
@@ -23,7 +23,19 @@ class BeaconsController < ApplicationController
 
     def home
         beacons = Beacon.all 
-        render json: beacons.to_json(:include => { :user => {:include => :profile}})
+        newbeacons = beacons.map do |beacon|
+            total = 0
+            beacon.donations.each do |donation|
+                if donation.confirmed 
+                    total += donation.amount
+                end
+            end
+            newbeacon = beacon.to_json(:include => { :user => {:include => :profile}})
+            newbeacon = JSON.parse(newbeacon)
+            hash = {beacon: newbeacon, total: total}
+            hash
+        end
+        render json: newbeacons
     end
 
     def beacon_params
