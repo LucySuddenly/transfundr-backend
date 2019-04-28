@@ -13,6 +13,7 @@ class UsersController < ApplicationController
 
     def show 
         user = User.find(params[:id])
+        #prepare beacons
         beacons = user.beacons.map do |beacon|
             total = 0
             beacon.donations.each do |donation|
@@ -22,7 +23,14 @@ class UsersController < ApplicationController
             end
             {beacon: beacon, total: total}
         end
-        render json: {user: UserSerializer.new(user), beacons: beacons}
+        #prepare points
+        points = 0
+        user.donations.each do |donation|
+            if donation.confirmed
+                points += donation.points
+            end
+        end
+        render json: {user: UserSerializer.new(user), beacons: beacons, points: points}
     end
 
     private
