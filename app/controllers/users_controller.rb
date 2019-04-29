@@ -30,7 +30,9 @@ class UsersController < ApplicationController
                 points += donation.points
             end
         end
-        render json: {user: UserSerializer.new(user), beacons: beacons, points: points}
+        new_user = user.to_json(:include => [:profile, {:donations => {:include => {:beacon => {:include => {:user => {:include => :profile}}}}}}])
+        new_user = JSON.parse(new_user)
+        render json: {user: new_user, beacons: beacons, points: points}
     end
 
     private
