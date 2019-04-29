@@ -20,6 +20,16 @@ class DonationsController < ApplicationController
         render json: donation.to_json(:include => [{ :user => {:include => :profile}}, {:beacon => {:include => {:user => {:include => :profile}}}}])
     end
 
+    def notifications
+        notifications = []
+        Donation.all.each do |donation|
+            if donation.confirmed == false && donation.beacon.user.id == token_user_id
+                notifications << donation
+            end
+        end
+        render json: notifications
+    end
+
     private
 
     def donation_params
