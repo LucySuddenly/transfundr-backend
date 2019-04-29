@@ -8,5 +8,7 @@ Rails.application.routes.draw do
   get '/home', to: "beacons#home"
   post '/confirm', to: "donations#confirm"
   get '/notifications', to: "donations#notifications"
+  get '/nearlythere', to: "beacons#nearly_there"
+  get '/needshelp', to: "beacons#needs_help"
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
