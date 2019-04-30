@@ -5,7 +5,9 @@ class ProfilesController < ApplicationController
         profile = Profile.new(profile_params)
         profile.user_id = token_user_id
         profile.save
-        render json: profile
+        user = User.find(profile.user_id)
+        token = encode_token({ user_id: user.id })
+        render json: { user: UserSerializer.new(user), jwt: token }, status: :accepted
     end
 
     def get_profile_by_user_id
