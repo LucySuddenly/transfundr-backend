@@ -38,17 +38,21 @@ class BeaconsController < ApplicationController
         end
         beacons = first + second + third
         #add total donated to payload
-        newbeacons = beacons.map do |beacon|
+        newbeacons = []
+        beacons.each do |beacon|
             total = 0
             beacon.donations.each do |donation|
                 if donation.confirmed 
                     total += donation.amount
                 end
             end
-            newbeacon = beacon.to_json(:include => { :user => {:include => :profile}})
-            newbeacon = JSON.parse(newbeacon)
-            hash = {beacon: newbeacon, total: total}
-            hash
+            #remove beacons that have met their targets
+            if total < beacon.target
+                newbeacon = beacon.to_json(:include => { :user => {:include => :profile}})
+                newbeacon = JSON.parse(newbeacon)
+                hash = {beacon: newbeacon, total: total}
+                newbeacons << hash
+            end
         end
         render json: newbeacons
     end
@@ -56,17 +60,21 @@ class BeaconsController < ApplicationController
     def nearly_there
         beacons = Beacon.all
         #add total donated to payload
-        newbeacons = beacons.map do |beacon|
+        newbeacons = []
+        beacons.each do |beacon|
             total = 0
             beacon.donations.each do |donation|
                 if donation.confirmed 
                     total += donation.amount
                 end
             end
-            newbeacon = beacon.to_json(:include => { :user => {:include => :profile}})
-            newbeacon = JSON.parse(newbeacon)
-            hash = {beacon: newbeacon, total: total}
-            hash
+            #remove beacons that have met their targets
+            if total < beacon.target
+                newbeacon = beacon.to_json(:include => { :user => {:include => :profile}})
+                newbeacon = JSON.parse(newbeacon)
+                hash = {beacon: newbeacon, total: total}
+                newbeacons << hash
+            end
         end
         #sort by nearly there
         beacons = newbeacons.sort_by do |beacon| 
@@ -92,17 +100,21 @@ class BeaconsController < ApplicationController
     def needs_help
         beacons = Beacon.all
         #add total donated to payload
-        newbeacons = beacons.map do |beacon|
+        newbeacons = []
+        beacons.each do |beacon|
             total = 0
             beacon.donations.each do |donation|
                 if donation.confirmed 
                     total += donation.amount
                 end
             end
-            newbeacon = beacon.to_json(:include => { :user => {:include => :profile}})
-            newbeacon = JSON.parse(newbeacon)
-            hash = {beacon: newbeacon, total: total}
-            hash
+            #remove beacons that have met their targets
+            if total < beacon.target
+                newbeacon = beacon.to_json(:include => { :user => {:include => :profile}})
+                newbeacon = JSON.parse(newbeacon)
+                hash = {beacon: newbeacon, total: total}
+                newbeacons << hash
+            end
         end
         #sort by nearly there
         beacons = newbeacons.sort_by do |beacon| 
