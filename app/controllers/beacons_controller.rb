@@ -1,3 +1,5 @@
+require_relative '../../transfundr.rb' 
+
 class BeaconsController < ApplicationController
     skip_before_action :authorized, only: [:show, :home, :nearly_there, :needs_help]
 
@@ -5,6 +7,7 @@ class BeaconsController < ApplicationController
         beacon = Beacon.new(beacon_params)
         beacon.user_id = token_user_id
         beacon.save
+        tweet_beacon("http://www.transfundr.com/beacons/#{beacon.id}", beacon.title)
         render json: beacon
     end
 
