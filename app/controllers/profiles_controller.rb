@@ -14,6 +14,18 @@ class ProfilesController < ApplicationController
         profile = Profile.find_by(user_id: params[:id])
         render json: profile
     end
+
+    def show
+        profile = Profile.find(params[:id])
+        render json: profile
+    end
+
+    def update
+        profile = Profile.find(params[:id])
+        profile.update(profile_params)
+        profile.save
+        render json: profile
+    end
     
     private
 
