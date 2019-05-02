@@ -1,10 +1,23 @@
 class UsersController < ApplicationController
     skip_before_action :authorized, only: [:create, :show, :rankings]
-    before_action :set_s3_direct_post, only: [:create, :update]
 
     def create
+        byebug
         user = User.create(user_params)
         if user.valid?
+            profile_body = Base64.decode64(params["profile_image_file"].split(',')[1])
+            profile_content = params["profile_image_file"].split(":")[1].split(";").flatten[0]
+            profile_obj = S3_BUCKET.object((0...8).map { (65 + rand(26)).chr }.join + params["profile_image_file_name"])
+            profile_obj.put(body: profile_body, acl: 'public-read', content_type: profile_content, content_encoding: 'base64')
+            
+            cover_body = Base64.decode64(params["cover_image_file"].split(',')[1])
+            cover_content = params["cover_image_file"].split(":")[1].split(";").flatten[0]
+            cover_obj = S3_BUCKET.object((0...8).map { (65 + rand(26)).chr }.join + params["cover_image_file_name"])
+            cover_obj.put(body: cover_body, acl: 'public-read', content_type: cover_content, content_encoding: 'base64')
+
+            profile = Profile.new(venmo: params["venmo"], cash: params["cash"], zelle: params["zelle"], paypal: params["paypal"], bio: params["bio"], profile_img: profile_obj.public_url, cover_img: cover_obj.public_url )
+            profile.user_id = user.id
+            profile.save
             token = encode_token(user_id: user.id)
             render json: {user: UserSerializer.new(user), jwt: token}, status: :created
         else
@@ -99,9 +112,5 @@ class UsersController < ApplicationController
 
     def user_params
         params.permit(:username, :email, :password, :trans, :femme, :nonwhite)
-    end
-
-    def set_s3_direct_post
-        @s3_direct_post = S3_BUCKET.presigned_post(key: "uploads/#{SecureRandom.uuid}/${filename}", success_action_status: '201', acl: 'public-read')
     end
 end
