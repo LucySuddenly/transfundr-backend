@@ -81,8 +81,8 @@ class BeaconsController < ApplicationController
         end
         #sort by nearly there
         beacons = newbeacons.sort_by do |beacon| 
-            beacon[:total].to_i / beacon[:beacon]["target"].to_i
-        end
+            (beacon[:total].to_i + 1).to_f / (beacon[:beacon]["target"].to_i).to_f
+        end.reverse
         #sort by nonwhite and femme
         first = []
         second = []
@@ -121,8 +121,8 @@ class BeaconsController < ApplicationController
         end
         #sort by nearly there
         beacons = newbeacons.sort_by do |beacon| 
-            beacon[:total].to_i / beacon[:beacon]["target"].to_i
-        end.reverse
+            (beacon[:total].to_i + 1).to_f / (beacon[:beacon]["target"].to_i).to_f
+        end
         #sort by nonwhite and femme
         first = []
         second = []
