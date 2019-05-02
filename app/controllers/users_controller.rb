@@ -2,7 +2,6 @@ class UsersController < ApplicationController
     skip_before_action :authorized, only: [:create, :show, :rankings]
 
     def create
-        byebug
         user = User.create(user_params)
         if user.valid?
             profile_body = Base64.decode64(params["profile_image_file"].split(',')[1])
