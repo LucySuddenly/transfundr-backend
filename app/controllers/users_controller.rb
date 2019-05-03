@@ -2,7 +2,11 @@ class UsersController < ApplicationController
     skip_before_action :authorized, only: [:create, :show, :rankings]
 
     def create
-        user = User.create(user_params)
+        user = User.new(user_params)
+        if user.trans 
+            user.femme = true
+        end
+        user.save
         if user.valid?
             profile_body = Base64.decode64(params["profile_image_file"].split(',')[1])
             profile_content = params["profile_image_file"].split(":")[1].split(";").flatten[0]
