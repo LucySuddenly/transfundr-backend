@@ -7,7 +7,7 @@ class BeaconsController < ApplicationController
         beacon = Beacon.new(beacon_params)
         beacon.user_id = token_user_id
         beacon.save
-        tweet_beacon("http://www.transfundr.com/beacons/#{beacon.id}", beacon.title)
+        # tweet_beacon("http://www.transfundr.com/beacons/#{beaconid}", beacontitle)
         render json: beacon
     end
 

@@ -14,30 +14,30 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
       methods: [:get, :post, :put, :patch, :delete, :options, :head]
   end
   allow do
-    origins '*'
+    origins 'https://www.transfundr.com'
 
-    resource 'https://www.transfundr.com',
+    resource '*',
       headers: :any,
       methods: [:get, :post, :put, :patch, :delete, :options, :head]
   end
   allow do
-    origins '*'
+    origins 'https://transfundr-frontend.herokuapp.com'
 
-    resource 'https://transfundr-frontend.herokuapp.com',
+    resource '*',
       headers: :any,
       methods: [:get, :post, :put, :patch, :delete, :options, :head]
   end
   allow do
-    origins '*'
+    origins 'http://www.transfundr.com'
 
-    resource 'http://www.transfundr.com',
+    resource '*',
       headers: :any,
       methods: [:get, :post, :put, :patch, :delete, :options, :head]
   end
   allow do
-    origins '*'
+    origins 'http://transfundr-frontend.herokuapp.com'
 
-    resource 'http://transfundr-frontend.herokuapp.com',
+    resource '*',
       headers: :any,
       methods: [:get, :post, :put, :patch, :delete, :options, :head]
   end
