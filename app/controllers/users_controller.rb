@@ -55,7 +55,8 @@ class UsersController < ApplicationController
     def rankings 
         #prepare top ten
         users = User.all 
-        users =  users.map do |user|
+        donators = []
+        users.each do |user|
             points = 0
             user.donations.map do |donation|
                 if donation.confirmed
@@ -63,9 +64,11 @@ class UsersController < ApplicationController
                 end
             end
             new_user = UserSerializer.new(user)
-            {user: new_user, points: points}
+            if points > 0
+                donators << {user: new_user, points: points}
+            end
         end
-        users = users.sort_by do |user|
+        users = donators.sort_by do |user|
             user[:points]
         end.reverse
         top_ten_users =  users[0..9]
