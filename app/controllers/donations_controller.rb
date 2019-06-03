@@ -3,6 +3,7 @@ class DonationsController < ApplicationController
 
     def create 
         donation = Donation.create(donation_params)
+        MailerMailer.donation_email(donation.beacon.user).deliver
         render json: donation
     end
 
